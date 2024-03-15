@@ -1,7 +1,9 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:js' as js;
+
 import 'package:flutter/material.dart';
 import 'package:manage_my_link/functions/functions.dart';
 import 'package:manage_my_link/widgets/error.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LinkWidget extends StatelessWidget {
   final String id;
@@ -19,11 +21,10 @@ class LinkWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        await launchUrl(
-          Uri.parse(link),
-          mode: LaunchMode.externalApplication,
-          webOnlyWindowName: "Link",
+      onTap: () {
+        js.context.callMethod(
+          'open',
+          [link],
         );
       },
       child: Container(
@@ -44,25 +45,23 @@ class LinkWidget extends StatelessWidget {
           children: [
             Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (imageUrl != null)
+                  if (imageUrl != "")
                     Expanded(
                       child: Image.network(
                         imageUrl!,
                         fit: BoxFit.contain,
                       ),
                     ),
-                  Expanded(
-                    child: Text(
-                      name,
-                      textScaler: TextScaler.noScaling,
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
+                  Text(
+                    name,
+                    textScaler: TextScaler.noScaling,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ],
